@@ -1,63 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('admin.layout')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+@section('style')
+    <style>
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: var(--typing-width);
+            }
+        }
+
+        @keyframes blink {
+            50% {
+                border-color: transparent;
+            }
+        }
+
+        .typing-effect {
+            font-size: 80px;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: .15em solid;
+            width: 0;
+            --typing-width: 100%;
+            /* Fallback width */
+        }
+    </style>
+@endsection
+
+@section('content')
+    <div style="width:100%; height:100vh; display: flex; justify-content:center; align-items:center">
+        <h1 id="welcome-text" class="typing-effect"></h1>
+    </div>
+@endsection
+
+@section('script')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var adminName = "{{ $admin->name }}";
+            var text = "Welcome, " + adminName;
+            var typingEffectElement = document.getElementById('welcome-text');
+
+            function typeEffect() {
+                typingEffectElement.style.width = '0';
+                typingEffectElement.textContent = text;
+                typingEffectElement.style.animation = 'none'; // Reset animation
+
+                setTimeout(function() {
+                    typingEffectElement.style.width = 'auto';
+                    var steps = text.length;
+
+                    // Create a temporary element to measure text width
+                    var tempElement = document.createElement('span');
+                    tempElement.style.fontSize = '80px';
+                    tempElement.style.whiteSpace = 'nowrap';
+                    tempElement.style.visibility = 'hidden';
+                    tempElement.textContent = text;
+                    document.body.appendChild(tempElement);
+                    var textWidth = tempElement.offsetWidth;
+                    document.body.removeChild(tempElement);
+
+                    // Set CSS variable for typing width
+                    typingEffectElement.style.setProperty('--typing-width', `${textWidth + 100}px`);
+
+                    typingEffectElement.style.animation =
+                        `typing 3.5s steps(${steps * 2}, end) forwards, blink .75s step-end infinite`;
+                }, 50);
+            }
+
+            typeEffect();
+            setInterval(typeEffect, 3500); // Repeat every 3.5 seconds
+        });
     </script>
-</head>
-
-<body>
-    <nav class="navbar bg-body-tertiary fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Admin Page</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
-                aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Admin Page</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                Dropdown
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Action</a></li>
-                                <li><a class="dropdown-item" href="#">Another action</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Something else here</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex mt-3" method="POST" action="{{ route('admin.logout') }}">
-                        @csrf
-                        <button class="btn btn-outline-danger" type="submit">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </nav>
-</body>
-
-</html>
+@endsection

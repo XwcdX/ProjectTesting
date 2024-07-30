@@ -11,6 +11,11 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::post('/logout', [AdminController::class, 'logout'])->name('admin.logout');
+        Route::get('/viewDataPerawat', [AdminController::class, 'view'])->name('admin.dataPerawat');
+        Route::get('/dataPerawat', [AdminController::class, 'index'])->name('dataPerawat.index');
+        Route::post('/dataPerawat', [AdminController::class, 'store'])->name('dataPerawat.store');
+        Route::post('/dataPerawat/{id}', [AdminController::class, 'edit'])->name('dataPerawat.edit');
+        Route::delete('/dataPerawat/{id}', [AdminController::class, 'destroy'])->name('dataPerawat.destroy');
     });
 });
 
