@@ -49,7 +49,7 @@
                                 href="{{ route('admin.dashboard') }}">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.dataPerawat') }}">Data Perawat</a>
+                            <a class="nav-link" href="{{ route('dataPerawat.index') }}">Data Perawat</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Cuti</a>
